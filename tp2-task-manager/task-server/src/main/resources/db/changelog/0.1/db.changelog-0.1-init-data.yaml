@@ -1,0 +1,12 @@
+databaseChangeLog:
+  - changeSet:
+      id: changelog-0.1-init-data
+      author: gonzalad
+      changes:
+        - insert:
+            context: dev
+            tableName: task
+            columns:
+              - column:
+                  name: name
+                  value: task1

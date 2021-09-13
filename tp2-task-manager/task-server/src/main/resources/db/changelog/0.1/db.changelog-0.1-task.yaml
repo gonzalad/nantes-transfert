@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: changelog-0.1-task
+      author: gonzalad
+      changes:
+        createTable:
+          tableName: task
+          columns:
+            - column:
+                name: id
+                type: uuid
+                defaultValueComputed: gen_random_uuid()
+                constraints:
+                  primaryKey: true
+                  nullable: false
+            - column:
+                name: name
+                type: text
+                constraints:
+                  primaryKey: false
+                  nullable: false
+                  unique: true
