@@ -1,12 +1,12 @@
 package com.transfert.tasks.task;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.stereotype.Service;
 
+@Service
 public class TaskManager {
     private final TaskRepository taskRepository;
 
@@ -27,7 +27,7 @@ public class TaskManager {
         if (taskRepository.existsByName(taskName)) {
             throw new TaskNameAlreadyExistsException(taskName);
         }
-        Task task = newTask(taskName);
+        var task = newTask(taskName);
         return taskRepository.save(task);
     }
 
@@ -36,7 +36,7 @@ public class TaskManager {
     }
 
     public Task update(TaskUpdateCommand command) {
-        Task task = taskRepository.findById(command.getId()).orElseThrow(()  -> new TaskNotFoundException(command.getId()));
+        var task = taskRepository.findById(command.getId()).orElseThrow(() -> new TaskNotFoundException(command.getId()));
         copy(command, task);
         taskRepository.save(task);
         return task;

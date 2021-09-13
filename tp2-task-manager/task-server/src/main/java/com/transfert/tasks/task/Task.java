@@ -7,8 +7,13 @@ import java.util.UUID;
 @Entity
 public class Task {
     @Id
-    private final UUID id;
+    private UUID id;
     private String name;
+
+    // Empty constructor for JPA
+    @SuppressWarnings("unused")
+    Task() {
+    }
 
     public Task(UUID id, String name) {
         this.id = id;
@@ -21,5 +26,9 @@ public class Task {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public UUID getId() {
+        return id;
     }
 }
