@@ -11,7 +11,7 @@ import { TaskListComponent } from './task-list/task-list.component';
   ],
   imports: [
     CommonModule,
-    TaskRoutingModule
+    TaskRoutingModule,
   ],
   exports: [
     TaskListComponent
