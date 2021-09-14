@@ -1,56 +1,45 @@
 package com.transfert.tdd1;
 
-import static org.mockito.Mockito.*;
-import org.junit.jupiter.api.BeforeEach;
+import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.Test;
 
 class EchoTest {
 
-    private Reader readerMock;
-    private Writer writerMock;
-    private Echo echo;
+    @Test
+    void givenInputNullThenVerifyNull() {
+        Echo echo = new Echo();
 
-    @BeforeEach
-    void setUp() {
-        readerMock = mock(Reader.class);
-        writerMock = mock(Writer.class);
-        echo = new Echo(readerMock, writerMock);
+        String result = echo.echo(null, 10);
+
+        assertThat(result).isNull();
     }
 
     @Test
-    void givenStopReadingWhenEchoThenSuccess() {
-        when(readerMock.read()).thenReturn(null);
+    void givenMaxSizeMoreThanInputNullThenVerifyEqualsInput() {
+        Echo echo = new Echo();
+        String input = "test";
 
-        echo.echo();
+        String result = echo.echo(input, 10);
 
-        verify(readerMock).read();
-        verify(writerMock, never()).write(anyString());
+        assertThat(result).isEqualTo(input);
+    }
+    @Test
+    void givenMaxSizeEqualsInputNullThenVerifyEqualsInput() {
+        Echo echo = new Echo();
+        String input = "test";
+
+        String result = echo.echo(input, input.length());
+
+        assertThat(result).isEqualTo(input);
     }
 
     @Test
-    void givenReadWhenEchoThenVerifyWrite() {
-        String message = "Word";
-        when(readerMock.read())
-            .thenReturn(message)
-            .thenReturn(null);
+    void givenMaxSizeLessMoreThanInputNullThenVerifyEqualsInput() {
+        Echo echo = new Echo();
+        String input = "test";
 
-        echo.echo();
+        String result = echo.echo(input, 2);
 
-        verify(writerMock).write(message);
-    }
-
-    @Test
-    void givenMultipleReadWhenEchoThenVerifyWrite() {
-        String message1 = "Hello";
-        String message2 = "world";
-        when(readerMock.read())
-            .thenReturn(message1)
-            .thenReturn(message2)
-            .thenReturn(null);
-
-        echo.echo();
-
-        verify(writerMock).write(message1);
-        verify(writerMock).write(message2);
+        assertThat(result).isEqualTo("te");
     }
 }

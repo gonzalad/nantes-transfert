@@ -1,4 +1,4 @@
-package com.transfert.tdd1;
+package com.transfert.tdd2;
 
 public interface Reader {
     String read();
