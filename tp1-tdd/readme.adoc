@@ -1,0 +1,69 @@
+# Exercices liées aux TDD et Design Pattern
+
+## TDD: Initiation
+
+Choisir un des TP suivants (à noter, on a utilisé uniquement le Calculator)
+
+
+### TDDX: Calculator
+
+Réaliser Kata calculette indiqué ici:
+
+* https://gayerie.dev/docs/testing/test/tdd.html
+
+
+### TDD1: Echo
+
+Faire un programme qui accepte une chaîne de caractère en entrée
+et un entier.
+
+Si:
+
+* l'entier dépasse ou est égal à la taille de la chaîne, alors
+  on retourne la chaîne inchangée.
+* si l'entier est inférieur à la taile de la chaîne, alors
+  on tronque la fin de la chaîne pour que la taille de la chaîne
+  retournée corresponde à entier
+* considérer les cas limites non listés ici
+
+
+## TDD3: Appliquer TDD et DDD à un petit projet
+
+Objectif: Développer un ensemble de composants graphique (à la Swing/AWT), mais s'affichant en ASCII sur la console.
+
+Nous avons besoin des composants suivants:
+
+. Fenetre +
+  On doit pouvoir ajouter n'importe quel nombre de composants à une fenêtre.
+  Lorsque la fenêtre s'affiche, elle doit afficher son pourtour et son contenu.
+  Exemple de fenêtre vide:
+```
+__
+||
+__
+```
+  Exemple de fenêtre avec contenu (C1 et C2 étant le rendu de deux composants):
+```
+____
+|C1C2|
+____
+```
+
+. Bouton +
+  Le bouton doit afficher un '*'
+. Label +
+  le label contient un texte (la valeur du libellé)
+  Il doit afficher '<valeur>:'
+. Input +
+  Le composant input accepte une taille.
+  Il doit afficher autant d'underscore que sa taille.
+
+Travaux optionnels:
+
+. Ajouter un composant de type Panel
+  Similaire au composant Fenetre, mais il n'affiche pas de pourtour. +
+  Attention, un panel peut accepter n'import quel type de composant, même un autre panel.
+. Rendre configurable la disposition du contenu d'une fenêtre un d'un panel
+  Les panel et fenêtre doivent pouvoir afficher leur contenu en vertical ou horizontal.
+  Rendre ce mécanisme extensible (ou souhaite dans le futur pouvoir afficher sur un nom de colonnes max, etc...)
+
