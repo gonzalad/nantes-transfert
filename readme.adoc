@@ -1,18 +1,25 @@
-# Exercices liées aux TDD et Design Pattern
+# Exercices
 
-## TDD: Initiation
+## Design patterns
+
+Des petits exemples sans prétention fait en live durant le passage de connaissances autour de la factory et du décorateur.
+
+
+## TDD
+
+### TDD: Initiation
 
 Choisir un des TP suivants (à noter, on a utilisé uniquement le Calculator)
 
 
-### TDDX: Calculator
+#### TDDX: Calculator
 
 Réaliser Kata calculette indiqué ici:
 
 * https://gayerie.dev/docs/testing/test/tdd.html
 
 
-### TDD1: Echo
+#### TDD1: Echo
 
 Faire un programme qui accepte une chaîne de caractère en entrée
 et un entier.
@@ -27,7 +34,7 @@ Si:
 * considérer les cas limites non listés ici
 
 
-## TDD3: Appliquer TDD et DDD à un petit projet
+### TDD3: Appliquer TDD et DDD à un petit projet
 
 Objectif: Développer un ensemble de composants graphique (à la Swing/AWT), mais s'affichant en ASCII sur la console.
 
@@ -67,3 +74,8 @@ Travaux optionnels:
   Les panel et fenêtre doivent pouvoir afficher leur contenu en vertical ou horizontal.
   Rendre ce mécanisme extensible (ou souhaite dans le futur pouvoir afficher sur un nom de colonnes max, etc...)
 
+
+## Application: Gestion de tâches
+
+Développement d'une application Spring Boot / Angular pour créer des tâches
+et les exécuter (un peu similaire à un tout petit jenkins)
