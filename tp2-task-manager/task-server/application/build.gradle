@@ -1,0 +1,9 @@
+plugins {
+    id 'java'
+}
+
+dependencies {
+    api project(':domain')
+    // TODO: configurer la dépendance spring-data-commons au lieu du starter jpa
+    api 'org.springframework.boot:spring-boot-starter-data-jpa'
+}

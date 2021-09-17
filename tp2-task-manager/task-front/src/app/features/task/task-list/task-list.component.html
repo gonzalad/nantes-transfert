@@ -1,3 +1,7 @@
+<ul>
+  <li *ngFor="let task of tasks">{{ task.name }}</li>
+</ul>
+<!--
 <table mat-table [dataSource]="tasks">
   <ng-container matColumnDef="id">
     <th mat-header-cell *matHeaderCellDef> Id. </th>
@@ -10,3 +14,4 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
 </table>
+-->

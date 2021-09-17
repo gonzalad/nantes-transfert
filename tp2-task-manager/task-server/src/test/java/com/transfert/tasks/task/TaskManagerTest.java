@@ -15,19 +15,19 @@ import org.springframework.data.domain.PageRequest;
 
 class TaskManagerTest {
     private TaskManager taskManager;
-    private TaskRepository taskRepository;
+    private TaskServicePort taskServicePort;
 
     @BeforeEach
     void setUp() {
-        taskRepository = mock(TaskRepository.class);
-        taskManager = new TaskManager(taskRepository);
+        taskServicePort = mock(TaskServicePort.class);
+        taskManager = new TaskManager(taskServicePort);
     }
 
     @Test
     void whenFindAllThenVerifyTasksReturnedFromRepository() {
         PageRequest pageRequest = PageRequest.of(0, 10);
         PageImpl<Task> page = new PageImpl<>(List.of(new Task(UUID.randomUUID(), "someTask")), pageRequest, 1L);
-        when(taskRepository.findAll(pageRequest)).thenReturn(page);
+        when(taskServicePort.findAll(pageRequest)).thenReturn(page);
 
         Page<Task> tasks = taskManager.findAll(pageRequest);
 
@@ -38,7 +38,7 @@ class TaskManagerTest {
     void whenFindByIdThenVerifyTasksReturnedFromRepository() {
         UUID id = UUID.randomUUID();
         Task task = new Task(id, "hello");
-        when(taskRepository.findById(id)).thenReturn(Optional.of(task));
+        when(taskServicePort.findById(id)).thenReturn(Optional.of(task));
 
         Optional<Task> tasks = taskManager.findById(id);
 
@@ -49,15 +49,15 @@ class TaskManagerTest {
     void whenCreateThenVerifyTaskCopiedAndCreatedInRepository() {
         String taskName = "name";
         TaskCreateCommand command = new TaskCreateCommand(taskName);
-        when(taskRepository.existsByName(taskName)).thenReturn(false);
+        when(taskServicePort.existsByName(taskName)).thenReturn(false);
         Task created = new Task(UUID.randomUUID(), taskName);
-        when(taskRepository.save(any())).thenReturn(created);
+        when(taskServicePort.save(any())).thenReturn(created);
 
         Task task = taskManager.create(command);
 
         assertThat(task).isSameAs(created);
         ArgumentCaptor<Task> argumentCaptor = ArgumentCaptor.forClass(Task.class);
-        verify(taskRepository).save(argumentCaptor.capture());
+        verify(taskServicePort).save(argumentCaptor.capture());
         Task saved = argumentCaptor.getValue();
         assertThat(saved).isNotNull();
         assertThat(saved.getName()).isEqualTo(taskName);
@@ -67,31 +67,31 @@ class TaskManagerTest {
     void givenTaskNameAlreadyExistsWhenCreateThenVerifyError() {
         String taskName = "name";
         TaskCreateCommand command = new TaskCreateCommand(taskName);
-        when(taskRepository.existsByName(taskName)).thenReturn(true);
+        when(taskServicePort.existsByName(taskName)).thenReturn(true);
 
         Throwable thrown = catchThrowable(() -> taskManager.create(command));
 
         assertThat(thrown).isInstanceOf(TaskNameAlreadyExistsException.class);
-        verify(taskRepository, never()).save(any());
+        verify(taskServicePort, never()).save(any());
     }
 
     @Test
     void whenUpdateThenVerifyTaskCopiedAndUpdatedInRepository() {
         TaskUpdateCommand command = new TaskUpdateCommand(UUID.randomUUID(), "name");
         Task taskInDb = new Task(command.getId(), "previousName");
-        when(taskRepository.findById(command.getId())).thenReturn(Optional.of(taskInDb));
+        when(taskServicePort.findById(command.getId())).thenReturn(Optional.of(taskInDb));
 
         Task task = taskManager.update(command);
 
         assertThat(task).isSameAs(taskInDb);
-        verify(taskRepository).save(taskInDb);
+        verify(taskServicePort).save(taskInDb);
         assertThat(taskInDb.getName()).isEqualTo(command.getName());
     }
 
     @Test
     void givenInexistantTaskWhenUpdateThenError() {
         TaskUpdateCommand command = new TaskUpdateCommand(UUID.randomUUID(), "name");
-        when(taskRepository.findById(command.getId())).thenReturn(Optional.empty());
+        when(taskServicePort.findById(command.getId())).thenReturn(Optional.empty());
 
         Throwable thrown = catchThrowable(() -> taskManager.update(command));
 
@@ -101,17 +101,17 @@ class TaskManagerTest {
     @Test
     void whenDeleteThenVerifyDeletedInRepository() {
         UUID id = UUID.randomUUID();
-        when(taskRepository.existsById(id)).thenReturn(true);
+        when(taskServicePort.existsById(id)).thenReturn(true);
 
         taskManager.delete(id);
 
-        verify(taskRepository).deleteById(id);
+        verify(taskServicePort).deleteById(id);
     }
 
     @Test
     void givenInexistantTaskWhenDeleteThenError() {
         UUID id = UUID.randomUUID();
-        when(taskRepository.existsById(id)).thenReturn(false);
+        when(taskServicePort.existsById(id)).thenReturn(false);
 
         Throwable thrown = catchThrowable(() -> taskManager.delete(id));
 

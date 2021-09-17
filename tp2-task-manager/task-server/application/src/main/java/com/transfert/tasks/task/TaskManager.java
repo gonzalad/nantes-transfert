@@ -8,27 +8,27 @@ import org.springframework.stereotype.Service;
 
 @Service
 public class TaskManager {
-    private final TaskRepository taskRepository;
+    private final TaskServicePort taskServicePort;
 
-    public TaskManager(TaskRepository taskRepository) {
-        this.taskRepository = taskRepository;
+    public TaskManager(TaskServicePort taskRepository) {
+        this.taskServicePort = taskRepository;
     }
 
     public Page<Task> findAll(PageRequest pageRequest) {
-        return taskRepository.findAll(pageRequest);
+        return taskServicePort.findAll(pageRequest);
     }
 
     public Optional<Task> findById(UUID id) {
-        return taskRepository.findById(id);
+        return taskServicePort.findById(id);
     }
 
     public Task create(TaskCreateCommand command) {
         String taskName = command.getName();
-        if (taskRepository.existsByName(taskName)) {
+        if (taskServicePort.existsByName(taskName)) {
             throw new TaskNameAlreadyExistsException(taskName);
         }
         var task = newTask(taskName);
-        return taskRepository.save(task);
+        return taskServicePort.save(task);
     }
 
     private Task newTask(String taskName) {
@@ -36,9 +36,9 @@ public class TaskManager {
     }
 
     public Task update(TaskUpdateCommand command) {
-        var task = taskRepository.findById(command.getId()).orElseThrow(() -> new TaskNotFoundException(command.getId()));
+        var task = taskServicePort.findById(command.getId()).orElseThrow(() -> new TaskNotFoundException(command.getId()));
         copy(command, task);
-        taskRepository.save(task);
+        taskServicePort.save(task);
         return task;
     }
 
@@ -47,9 +47,9 @@ public class TaskManager {
     }
 
     public void delete(UUID id) {
-        if (!taskRepository.existsById(id)) {
+        if (!taskServicePort.existsById(id)) {
             throw new TaskNotFoundException(id);
         }
-        taskRepository.deleteById(id);
+        taskServicePort.deleteById(id);
     }
 }

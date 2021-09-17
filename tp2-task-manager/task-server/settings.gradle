@@ -1,1 +1,6 @@
 rootProject.name = 'task-server'
+
+include ':application'
+include ':domain'
+include ':infrastructure:jpa'
+include ':presentation:rest-adapter'

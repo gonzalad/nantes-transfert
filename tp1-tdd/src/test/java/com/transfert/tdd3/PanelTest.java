@@ -5,7 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
-class FenetreTest {
+class PanelTest {
 
     private Writer writer;
 
@@ -15,41 +15,36 @@ class FenetreTest {
     }
 
     @Test
-    void givenFenetreVideThenVerifyDisplay() throws IOException {
-        Fenetre fenetre = new Fenetre();
+    void givenPanelVideThenVerifyDisplay() throws IOException {
+        Panel panel = new Panel();
 
-        fenetre.show(writer);
+        panel.show(writer);
 
-        String expected = "__\n"
-            + "||\n"
-            + "__";
+        String expected = "";
         assertThat(writer).asString().isEqualTo(expected);
     }
 
     @Test
     void givenFenetreWithSingleComponentThenVerifyDisplay() throws IOException {
-        Fenetre fenetre = new Fenetre();
-        //fenetre.addComponent(new Input(3));
+        Panel panel = new Panel();
+        panel.addComponent(new Input(3));
 
-        fenetre.show(writer);
+        panel.show(writer);
 
-        String expected = "_____\n"
-            + "|___|\n"
-            + "_____";
+        String expected = "___";
         assertThat(writer).asString().isEqualTo(expected);
     }
 
     @Test
     void givenFenetreWithMultipleComponentThenVerifyDisplay() throws IOException {
-        Fenetre fenetre = new Fenetre();
-        fenetre.addComponent(new Input(3));
-        fenetre.addComponent(new Bouton());
+        Panel panel = new Panel();
+        panel.addComponent(new Input(3));
+        panel.addComponent(new Bouton());
 
-        fenetre.show(writer);
+        panel.show(writer);
 
-        String expected = "______\n"
-            + "|___*|\n"
-            + "______";
+        String expected = "___*";
         assertThat(writer).asString().isEqualTo(expected);
     }
+
 }

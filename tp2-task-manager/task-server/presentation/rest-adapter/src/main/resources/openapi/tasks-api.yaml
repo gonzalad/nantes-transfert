@@ -1,0 +1,125 @@
+openapi: 3.0.1
+info:
+  title: |
+    Tasks API
+  description: |
+    Some API
+
+  version: 0.1.0
+
+servers:
+  - url: /api
+
+security:
+  - idTokenAuth: [ ]
+
+tags:
+  - name: tasks
+    description: |
+      bla
+
+paths:
+  '/tasks':
+    get:
+      tags:
+        - tasks
+      summary: List all tasks
+      operationId: findAllTasks
+      description: |
+        Paginated list
+      security:
+        - idTokenAuth: [ ]
+      parameters:
+        - name: pageable
+          in: query
+          style: form
+          explode: true
+          schema:
+            $ref: "#/components/schemas/Pageable"
+      responses:
+        '200':
+          description: Task list
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PagedTasks'
+
+components:
+  securitySchemes:
+    idTokenAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: |
+        Un ID token JWT généré par le serveur CAS de Pegase doit être utilisé lors de tout appel aux services COF.
+
+        L'ID Token doit être transmis dans le Header HTTP Authorization sous la forme 'Bearer ' (avec étant la valeur de l'id token).
+
+        TODO: quelle est la procédure pour générer cet ID Token ?
+
+  schemas:
+
+    # Données de pagination
+    Pageable:
+      type: object
+      example:
+        page: 0
+        taille: 10
+        tri: [ ]
+      properties:
+        page:
+          type: integer
+          default: 0
+          description: numéro de page demandée (commence à 0)
+        taille:
+          type: integer
+          default: 10
+          description: nombre d'élements par page
+        tri:
+          type: array
+          items:
+            type: string
+          default: [ ]
+          description: critères de tri, chaque tri est de la forme <propriété>[,asc|desc]
+
+    Paging:
+      properties:
+        totalElements:
+          type: integer
+          description: |
+            Nombre total de d'enregistrements existants en base
+          format: int64
+        totalPages:
+          type: integer
+          description: |
+            Nombre de pages totales existantes
+        taille:
+          type: integer
+          description: |
+            Nombre d'enregistrements demandés par page
+        page:
+          type: integer
+          description: |
+            Numéro de la page retournée (commence à 0)
+
+    Task:
+      required:
+        - id
+        - name
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+
+    Tasks:
+      properties:
+        items:
+          type: array
+          items:
+            $ref: "#/components/schemas/Task"
+
+    PagedTasks:
+      allOf:
+        - $ref: "#/components/schemas/Tasks"
+        - $ref: "#/components/schemas/Paging"

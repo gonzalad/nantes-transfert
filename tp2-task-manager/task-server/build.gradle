@@ -1,66 +1,54 @@
 plugins {
-	id 'org.springframework.boot' version '2.5.4'
-	id 'io.spring.dependency-management' version '1.0.11.RELEASE'
 	id 'java'
-	id "org.openapi.generator" version "4.3.0"
+	id "org.openapi.generator" version "4.3.0" apply false
+	id 'org.springframework.boot' version '2.5.4' apply false
+	id 'io.spring.dependency-management' version '1.0.11.RELEASE' apply false
 }
 
 group = 'com.transfert'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
 
-sourceSets {
-	main {
-		java.srcDirs += "$buildDir/generate-resources/main/src/main/java"
+allprojects {
+	apply plugin: 'io.spring.dependency-management'
+	apply plugin: 'java-library'
+	// apply plugin: 'java'
+
+	sourceCompatibility = '11'
+
+	repositories {
+		mavenCentral()
+	}
+
+	dependencyManagement {
+		imports {
+			mavenBom(org.springframework.boot.gradle.plugin.SpringBootPlugin.BOM_COORDINATES)
+			mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
+		}
+		dependencies {
+			dependency "io.springfox:springfox-boot-starter:${springfoxVersion}"
+			dependency "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonnullableVersion}"
+		}
+	}
+
+	test {
+		useJUnitPlatform()
 	}
 }
 
-repositories {
-	mavenCentral()
-}
-
-ext {
-	set('testcontainersVersion', "1.16.0")
-}
+apply plugin: 'org.springframework.boot'
 
 dependencies {
+	implementation project(':application')
+	implementation project(':domain')
+	implementation project(':infrastructure:jpa')
+	implementation project(':presentation:rest-adapter')
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	implementation 'org.liquibase:liquibase-core'
 	runtimeOnly 'org.postgresql:postgresql'
-	implementation "io.springfox:springfox-boot-starter:${springfoxVersion}"
-	compileOnly "org.openapitools:jackson-databind-nullable:${openapitoolsJacksonnullableVersion}"
 
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.testcontainers:junit-jupiter'
 	testImplementation 'org.testcontainers:postgresql'
 }
-
-dependencyManagement {
-	imports {
-		mavenBom "org.testcontainers:testcontainers-bom:${testcontainersVersion}"
-	}
-}
-
-test {
-	useJUnitPlatform()
-}
-
-openApiGenerate {
-	generatorName = 'spring'
-	inputSpec = "$rootDir/src/main/resources/openapi/tasks-api.yaml".toString()
-	apiPackage = 'com.transfert.tasks.rest.api'
-	modelPackage = 'com.transfert.tasks.rest.model'
-	invokerPackage = 'com.transfert.tasks.rest'
-	configOptions = [
-			dateLibrary            : 'java8',
-			interfaceOnly          : "true",
-			useTags                : "true",
-			useBeanValidation      : "false",
-			hideGenerationTimestamp: "true",
-			booleanGetterPrefix    : "is"
-	]
-}
-
-compileJava.dependsOn tasks.openApiGenerate

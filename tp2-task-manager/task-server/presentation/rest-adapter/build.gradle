@@ -1,0 +1,39 @@
+plugins {
+    id 'java'
+}
+
+apply plugin: "org.openapi.generator"
+
+sourceSets {
+    main {
+        java.srcDirs += "$buildDir/generate-resources/main/src/main/java"
+    }
+}
+
+dependencies {
+    implementation project(':application')
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation "io.springfox:springfox-boot-starter"
+    compileOnly "org.openapitools:jackson-databind-nullable"
+
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.testcontainers:junit-jupiter'
+}
+
+openApiGenerate {
+    generatorName = 'spring'
+    inputSpec = "$projectDir/src/main/resources/openapi/tasks-api.yaml".toString()
+    apiPackage = 'com.transfert.tasks.rest.api'
+    modelPackage = 'com.transfert.tasks.rest.model'
+    invokerPackage = 'com.transfert.tasks.rest'
+    configOptions = [
+            dateLibrary            : 'java8',
+            interfaceOnly          : "true",
+            useTags                : "true",
+            useBeanValidation      : "false",
+            hideGenerationTimestamp: "true",
+            booleanGetterPrefix    : "is"
+    ]
+}
+
+compileJava.dependsOn tasks.openApiGenerate

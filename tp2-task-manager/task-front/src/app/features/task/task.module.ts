@@ -18,6 +18,6 @@ import { TaskListComponent } from './task-list/task-list.component';
   ],
   exports: [
     TaskListComponent
-  ]
+  ],
 })
 export class TaskModule { }
