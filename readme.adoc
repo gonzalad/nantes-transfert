@@ -1,81 +1,522 @@
-# Exercices
+= Transert connaissances
+:toc:
+:toclevels: 7
+:sectnums:
+:sectnumlevels: 7
 
-## Design patterns
+== SOLID
 
-Des petits exemples sans prétention fait en live durant le passage de connaissances autour de la factory et du décorateur.
+SOLID stands for:
 
-
-## TDD
-
-### TDD: Initiation
-
-Choisir un des TP suivants (à noter, on a utilisé uniquement le Calculator)
-
-
-#### TDDX: Calculator
-
-Réaliser Kata calculette indiqué ici:
-
-* https://gayerie.dev/docs/testing/test/tdd.html
-
-
-#### TDD1: Echo
-
-Faire un programme qui accepte une chaîne de caractère en entrée
-et un entier.
-
-Si:
-
-* l'entier dépasse ou est égal à la taille de la chaîne, alors
-  on retourne la chaîne inchangée.
-* si l'entier est inférieur à la taile de la chaîne, alors
-  on tronque la fin de la chaîne pour que la taille de la chaîne
-  retournée corresponde à entier
-* considérer les cas limites non listés ici
-
-
-### TDD3: Appliquer TDD et DDD à un petit projet
-
-Objectif: Développer un ensemble de composants graphique (à la Swing/AWT), mais s'affichant en ASCII sur la console.
-
-Nous avons besoin des composants suivants:
-
-. Fenetre +
-  On doit pouvoir ajouter n'importe quel nombre de composants à une fenêtre.
-  Lorsque la fenêtre s'affiche, elle doit afficher son pourtour et son contenu.
-  Exemple de fenêtre vide:
 ```
-__
-||
-__
-```
-  Exemple de fenêtre avec contenu (C1 et C2 étant le rendu de deux composants):
-```
-____
-|C1C2|
-____
+S - Responsabilité unique (Single responsibility principle)
+	une classe, une fonction ou une méthode doit avoir une et une seule responsabilité
+O - Ouvert/fermé (Open/closed principle)
+	une entité applicative (classe, fonction, module ...) doit être fermée à la modification directe mais ouverte à l'extension
+L - Substitution de Liskov (Liskov substitution principle)
+	une instance de type T doit pouvoir être remplacée par une instance de type G, tel que G sous-type de T, sans que cela ne modifie la cohérence du programme
+I - Ségrégation des interfaces (Interface segregation principle)
+	préférer plusieurs interfaces spécifiques pour chaque client plutôt qu'une seule interface générale
+D - Inversion des dépendances (Dependency inversion principle)
+	il faut dépendre des abstractions, pas des implémentations
 ```
 
-. Bouton +
-  Le bouton doit afficher un '*'
-. Label +
-  le label contient un texte (la valeur du libellé)
-  Il doit afficher '<valeur>:'
-. Input +
-  Le composant input accepte une taille.
-  Il doit afficher autant d'underscore que sa taille.
+Difference between SRD and ISP: https://stackoverflow.com/a/55073007/1565142
 
-Travaux optionnels:
+Liens: https://philippe.developpez.com/articles/SOLIDdotNet/
 
-. Ajouter un composant de type Panel
-  Similaire au composant Fenetre, mais il n'affiche pas de pourtour. +
-  Attention, un panel peut accepter n'import quel type de composant, même un autre panel.
-. Rendre configurable la disposition du contenu d'une fenêtre un d'un panel
-  Les panel et fenêtre doivent pouvoir afficher leur contenu en vertical ou horizontal.
-  Rendre ce mécanisme extensible (ou souhaite dans le futur pouvoir afficher sur un nom de colonnes max, etc...)
+En très résumé:
+
+* une classe = gère un seul concept
+* private par défaut (fermé par défaut)
 
 
-## Application: Gestion de tâches
+== Design pattern
 
-Développement d'une application Spring Boot / Angular pour créer des tâches
-et les exécuter (un peu similaire à un tout petit jenkins)
+Objectif des design pattern:
+
+* donner des recettes éprouvées pour le développement de fragment élémentaires de programme.
+
+Avantages:
+
+* promeut pratiques de dév communes: permet de favoriser l'uniformisation du développement (pas à 100% c'est pas m'objectif, mais on s'y retrouve plus facilement quand on passe sur un programme inconnu)
+* simplifie le dialogue entre développeurs (i.e. au lieu d'expliquer verbeusement ce que fait une classe, on peut utilise le mot du design pattern si elle en emploie une)
+
+Attention:
+
+* à utiliser avec parcimonie (plus on utilise de DP dans son programme, plus le code a tendance à devenir technique - il faut trouver le juste milieu - qui ne viendra qu'après s'être fait longuement la main sur les DP et avoir failé à de très nombreuses reprises).
+
+Liens:
+
+* https://fr.wikipedia.org/wiki/Patron_de_conception
+* https://refactoring.guru/fr/design-patterns
+
+Les plus communs:
+
+* Fabrique/Fabrique abstraite
+* Singleton (moins utile avec l'ioc)
+* Prototype
+* Adaptateur
+* Composite
+* Décorateur
+* Facade (pour savoir ce que c'est - bp en parlent/parlaient)
+* Stratégie
+* Commande
+* Itérateur
+* Observateur
+* Patron de méthode
+
+
+== TDD
+
+Liens: https://gayerie.dev/docs/testing/test/tdd.html
+
+. A quoi ça sert ?
++
+* on aura une meilleure qualité de TU (on teste ce qui est réellement utile fonctionnellement - on ne fait pas du test technique juste pour assurer la couverture de code)
+* on aura une meilleure qualité du code car meilleure testabilité du code (le code est conçu de manière à être plus facilement testé -> favorise la décompsition et la ségrégation des responsabilités)
++
+. Comment faire du TDD ?
++
+Résumé: on va écrire le code de test et à partir du code de test progressivement et on va écrire le main en fonction du test
++
+Etapes:
++
+** Compréhension du besoin
+** Conception
+** Lister les testcase (cas à tester)
+** Boucle TDD (en commençant par les cas les plus simples)
+*** écrire le code du testcase
+*** écrire/modifier le code du main jusqu'à ce que les TUS passent 
+*** refacto des testcase (et donc du main)
+
+. Implications du TDD
++
+Connaître les raccourcis IDE pour générer du code
++
+sur intellij:
++
+```
+- F2: view next error
+- ALT+ENTREE: fix current error
+- CTRL+F5: rerun last test
+- ctrl+alt+v: extract variable
+- ctrl+alt+m: extract method
+- ctrl+alt+f: extract field
+```
++
+sur visual studio code:
++
+```
+- ctrl + .: opérations de refacto
+```
+. Exemple 1 TDD
++
+On va créer un programme Echo qui va lire la sysin et écrire chaque mot en stdout
+Lorsqu'on écrit un mot en Q, on quitte le programme
++
+Conception:
++
+```
+Reader {
+	String read();
+}
+Writer {
+	write(String);
+}
+Echo {
+	echo();
+}
+```
++
+Liste des cas à tester (pour Echo):
++
+* l'utilisateur quitte le programme
+* l'utilisateur écrit qq chose
+
+
+== Back
+
+=== Spring
+
+Spring scanne au démarre toutes les classes contenus dans le ackage de la clase référencée par le SpringRunner
++ toutes les autoconfigurations (qui sont en général des librairies réutilisables).
+
+Liens:
+
+* la bible: https://docs.spring.io/spring-boot/docs/current/reference/htmlsingle/
+* pour la doc de toute la configuration possible avec Spring Boot, se reporter au chapitre Common Application Properties
+* nouveautés spring: https://spring.io/blog
+
+
+. Déclarer un bean spring:
+```
+@RestController
+@Controller
+@Service
+@Component
+@Repository
+@Named et @Singleton
+@Configuration + @Bean (pour déclarer n beans)
+! autoconf possibles
+```
+. Injecter ce bean 
+  via un champ ou une méthode annoté avec @Autowired/@Inject/@Resource
+  ou via le contructeur (mieux pour les TUs *et* pour sentir quand il y a trop d'interdépendance - bref, qd le design commence à sentir mauvais)
+
+
+Pour injecter:
+
+* soit via constructeur
+* soit directement dans l'attribut via @Autowired ou @Inject
+
+=== Couche REST
+
+```
+@RestController
+@PathVariable
+@RequestParam
+@RequestBody
+@RequestMapping
+ResponseEntity
+```
+
+@ControllerAdvice + @ExceptionHandler
+
+TP: créer une application spring avec contrôleur REST qui appelle un bean service greetings.
+	jouer avec les annotations (RequestMapping, PathVariable, ResponseEntity, RequestBody)
+	i.e. GET  /api?name=user, GET /api/{user}, PUT ...
+
+
+=== Docker
+
+- qu'est ce que c'est, à quoi ça sert ?
+- dockerhub
+- lancer le helloworld
+- présentation des layers, et optimisation des images
+- TP: création d'une image de l'application Spring précédente et lancement
+	googler pour le faire
++
+```
+docker build .
+docker run <img> avec <img>: nom de l'image produit à la fin du build
+```
+- divers +
+  différence image/container
+  se connecter à un container existant, faire du apt install, etc...
+
+
+=== Application exemple 2: Gestionnaire de tâches
+
+
+Objectif:
+
+L'application va permettre à un utilisateur de créer des tâches.
+
+Pour créer une tâche l'utilisateur doit indiquer:
+
+* quel est le type de tâche
+* configurer la tâche
+
+L'application va gérer une liste de types de tâches.
+
+Exemple de types de tâches:
+
+* Sysout: va afficher la configuration de la tâche en sysout
+* Grovvy: va exécuter le script groovy fourni par l'utilisateur (dans la configuration de la tâche)
+* HostStats: affiche l'état du serveur (cpu, etc...) en sysout
+
+De nouvelles versions de l'application pourraient permettre de proposer plus de tâches.
+
+Il faut donc que ce soit un mécanisme extensible.
+
+L'utilisateur pourra lister les tâches créer, les modifier et les supprimer.
+
+Il pourra aussi demander l'exécution d'une tâche (il peut exécuter plusieurs fois la même tâche).
+
+Il pourra ensuite consulter l'état des tâches lancées.
+
+On doit voir à minima:
+
+* identifiant d'exécution
+* nom de la tâche
+* timestamp de début et fin de l'exécution
+* sysout/syserr
+* statut
+* stack d'erreur
+
+
+
+==== Création projet back
+
+=> spring starter
+
+==== Conception
+
+```
+Task<<command>>
+=> exécution ?
+=> définition
+
+Status
+=> SUCCESS, SCHEDULED, RUNNING, ABORTED, ERROR
+
+TaskRun
+=> historique d'exécution d'une tâche
+seulement avce status success, running, aborted ou error
+
+TaskExecutor<ISP>
+-> lance l'exécution d'une tâche (retourne un TaskRun)
+=> une implémentation pourrait êxécuter en synchrone, une autre en asynchronevia background thread, une autre en async via kafka, etc...
+
+TDD de 
+<ISP>
+-> liste des tâches
+-> création d'une nouvelle tâche
+
+Task(Run)Manager<ISP> ?
+-> liste des exécutions
+
+TaskLog
+- error
+- sout
+```
+
+
+==== TP: développer en TDD de TaskManager
+
+- liste: si pas de tâche en base, alors retourner liste vide
+- liste: si tâche en base, alors retourner les tâches en base (liste paginée) +
+  => simplifié car au final on utilise juste un repo (un seul TU donc)
+- detail: visu détail tache, success
+- detail: si tache existe pas, alors Optional +
+  => simplifié
+- update: si tache existe, alors vérifier mak
+- update: si tâche n'existe pas alors NotFound
+- delete: idem update
+- create: prendre un taskType en entrée + nom dela tâche (pas de config pour le moment)
+- create: vérifier qu'une tâche de meme nom n'existe pas en db
+
+
+==== Fonctionnalités supplémentaires
+
+Si nous souhaitons continuer le développement, on peut imaginer:
+
+* pouvoir paramétrer le runner des tâches (i.e. synchrone, dans un thread en background, sur un autre serveur (i.e. kafka ?)) 
+* métadonnées de configuration (spécifique à chaque type de tâches)
+* types de tâches supplémentaires: groovy, etc...
+
+
+
+== Front
+
+
+=== Démarrer un nouveau projet
+
+```
+# update to latest version of ng cli
+npm install -g @angular/cli@latest
+
+# change node version 
+nvm install 14.17.6
+
+# créer nouvelle version de projet angular
+ng new
+
+# installer material ou autre bibliothèque
+ng add @angular/material
+```
+
+=== Coding style and folder structure
+
+Liens: 
+
+* https://angular.io/guide/styleguide
+
+On a adopté l'organisation suivrante dans COF:
+
+```
+src/app/core
+
+src/app/features
+	fonction1
+	fonction2
+src/app/shared
+	comp1
+	comp2
+```
+
+Le répertoire features contient les modules fonctionnels de l'application
+
+Le répertoire shared contient les modules partagés (utilisés) par plusieurs autres modules de l'application
+
+Le répertoire core contient les composants utilisés dès le démarrage de l'application (i.e. authentification, layout, ...)
+
+Cette organisation permet:
+
+* promouvoir l'organisation fonctionnelle de l'application (chaque répertoire fils de features, et shared correspond à un nom/module fonctionnel - éviter le découpage technique) +
+Donc on aura plutôt un découpage:
++
+```
+src/app/features
+	objet-formation
+	formation
+```
++
+Donc on aura plutôt un découpage:
++
+```
+src/app/features
+	components
+	services
+	models
+```
+* activer le lazy loading (sur les features)
+
+
+=== Models ou pas de model ?
+
+Perso, je suis pour la création d'objet model distincyts de l'API - sauf dans le cas d'une application très simple qui doit être développée rapidement ou jettable.
+
+Ceci permet d'ajouter du comportement directement au niveau des models et simplifie la maintenance.
+
+Dans COF, cela a permis d'éliminer du code dupliqué des composants angular en le déplacant dans le modèle
+
+
+=== ngrx ou pas ?
+
+A mon sens, déjà il faut bien maîtriser angular et rxjs avant d'envisager la mise en place de ngrx.
+
+
+=== Types d'objet Angular
+
+* Composant
+* Service
+* Module
+* Router
+* Pipe
+* Resolver
+* Interceptor
+
+Composant:
+- il s'agit dun composant graphique +
+	-> favorise la réutilisation et le découpage en briques élémentaires de l'UI +
+	-> utiliser SRP !!!
+
+Service:
+
+* Singleton (en général)
+
+Model:
+
+* Pas un composant Angular, mais correspond aux entities/value object de l'application du point de vue front
+	certains projets utilisent les objets retournés par les APIs appelés (bof)
+	d'autres projets créent leur modèle eux même (pour pouvoir ajouter du code)
+
+Module:
+
+* permet de regrouper des classes Angular liées à une même fonctionnalité ensemble.
+	un module va permettre d'exposer uniquement ce qui est censé être utilisé par l'extérieur et cacher ce qui est propre à l'implémentation de la fonctionnalité
+	i.e. si pour développer une fonctionnalité 'lister les tâches', j'ai dû développer un composant liste de tâches mais aussi un composant colonne de la liste,
+	alors le module exportera uniquement le composant 'liste des tâches' (celui pouvant être utilisé par d'autres modules)
+
+Router:
+
+* permet de naviguer entre écrans/fragments d'écran
+
+Pipe:
+
+* permet d'optimiser l'affichage de données élémentaires à l'écran
+* permet de réutiliser un même algorithme d'affichage +
+  i.e. afficher la monnaie
+
+Resolver:
+
+* permet de pré-charger des données avant l'affichage d'une page. +
+A utiliser avec parcimonie/soin, voire à éviter...
+Bof à mon sens car:
+** cela scinde artificiellement un composant en 2 (le composant ne pourra plus fonctionner sans son resolver) - on a donc 2 composants très fortement couplés
+** en général pas forcément utile d'attendre la récupération des données avant de démarrer l'affichage d'une page
+
+
+Interceptor:
+
+- permet de faire des traitement avant/après une requête Ajax
+
+
+=== rxjs
+	
+https://www.learnrxjs.io/learn-rxjs/
+
+https://rxjs.dev/guide/overview
+
+Tips sur Rxjs:
+
+* faire le plus simple possible (il faut se méfier des pipes avec 10 opérateurs rxjs)
+* si besoin d'échaîner bp d'étape, alors ne pas hésitez à scinder en étapes fonctionnelles (méthodes private avec des noms fonctionnels parlant)
+* quand on a fini d'écrire le pipe, il faut comprendre pouquoi on a utilisé chaque opérateur (ne pas utiliser au hasard)
+* lors de l'écriture du pipe, ne pas hésiter à changer les lambda (les écrire en multi-ligne si ça sert), à utiliser l'ide pour connaître le type de données en entrée et en sortie de chaque étape du pipe => une fois que ça compile faire du cleanp (i.e. multi-ligne => single line, etc...)
+
+
+Opérateurs les plus utilisés:
+
+* map
+* switchMap/mergeMap
+
+Plus rare:
+
+* catchError
+* of
+* filter
+* forkJoin
+* takeUntil
+
+A éviter:
+
+* pluck
+
+
+=== Démarrer les dév
+
+On va développer la partie front du projet back précédent (gestionnaire de tâches)
+
+On utilise le client angular (ng cli) pour nous aider à créer les composants.
+
+c.f. https://angular.io/cli/generate
+
+Une fois qu'on sera à l'aise, on pourra les créer à la main.
+
+```
+# créer un module core
+ng g module core
+
+# créer un feature module (avec routing)
+ng g module features/task --routing
+
+# créer un composant
+ng generate c features/task/task-list --export -m features/task
+
+# créer un service
+ng g s shared/task
+
+# installer les dépendances (à faire à chaque modif du package.json)
+npm i
+
+# démarrer application
+ng serve
+```
+
+More CLI:
+
+```
+ng g class core/models/task
+```
+
+
+=== Exemple 2: service lister les tâches
+
+créer la fonction lister tâches dans le service (retourne une liste en dur)
+hint: retour obs
+
+utiliser le service dans le composant et afficher les tâches dans une liste
+
